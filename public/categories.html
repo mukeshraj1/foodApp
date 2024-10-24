@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Category Management</title>
+    <style>
+      table {
+        width: 100%;
+        border-collapse: collapse;
+      }
+      table,
+      th,
+      td {
+        border: 1px solid black;
+      }
+      th,
+      td {
+        padding: 10px;
+        text-align: left;
+      }
+    </style>
+  </head>
+  <body>
+    <h2>Category Management</h2>
+    <form id="categoryForm">
+      <input type="hidden" id="categoryId" name="categoryId" />
+      <label for="title">Category Title:</label>
+      <input type="text" id="title" name="title" required /><br /><br />
+
+      <label for="imageUrl">Image URL:</label>
+      <input type="text" id="imageUrl" name="imageUrl" /><br /><br />
+      <button id="createNewCategory" type="submit">Create New Category</button>
+      <button type="submit">Save Category</button>
+    </form>
+
+    <h3>Category List</h3>
+    <table id="categoryTable">
+      <thead>
+        <tr>
+          <th>Title</th>
+          <th>Image URL</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+      </tbody>
+    </table>
+
+    <script>
+      async function fetchCategories() {
+        try {
+          const response = await fetch(
+            "http://localhost:5000/api/v1/category/getAll",
+            {
+              method: "GET",
+              headers: {
+                "Content-Type": "application/json",
+              },
+              credentials: "include",
+            }
+          );
+          const result = await response.json();
+          if (result.success) {
+            const categoryTable = document
+              .getElementById("categoryTable")
+              .getElementsByTagName("tbody")[0];
+            categoryTable.innerHTML = "";
+            result.categories.forEach((category) => {
+              const row = categoryTable.insertRow();
+              row.insertCell(0).innerText = category.title;
+              row.insertCell(1).innerText = category.imageUrl || "N/A";
+              const actionsCell = row.insertCell(2);
+              actionsCell.innerHTML = `
+                            <button onclick="editCategory('${category._id}')">Edit</button>
+                            <button onclick="deleteCategory('${category._id}')">Delete</button>`;
+            });
+          } else {
+            alert(result.message);
+          }
+        } catch (error) {
+          console.error("Error fetching categories:", error);
+        }
+      }
+
+      document
+        .getElementById("categoryForm")
+        .addEventListener("submit", async function (event) {
+          event.preventDefault();
+
+          const categoryId = document.getElementById("categoryId").value;
+          const formData = {
+            title: document.getElementById("title").value,
+            imageUrl: document.getElementById("imageUrl").value,
+          };
+
+          try {
+            const response = await fetch(
+              categoryId
+                ? `http://localhost:5000/api/v1/category/update/${categoryId}`
+                : "http://localhost:5000/api/v1/category/create",
+              {
+                method: categoryId ? "PUT" : "POST",
+                headers: {
+                  "Content-Type": "application/json",
+                },
+                credentials: "include",
+                body: JSON.stringify(formData),
+              }
+            );
+
+            const result = await response.json();
+            alert(result.message);
+            fetchCategories();
+            document.getElementById("categoryForm").reset();
+          } catch (error) {
+            console.error("Error saving category:", error);
+            alert("Operation failed");
+          }
+        });
+
+      async function editCategory(categoryId) {
+        try {
+          const response = await fetch(
+            `http://localhost:5000/api/v1/category/get/${categoryId}`,
+            {
+              method: "GET",
+              headers: {
+                "Content-Type": "application/json",
+              },
+              credentials: "include",
+            }
+          );
+          const result = await response.json();
+          if (result.success) {
+            const category = result.category;
+            document.getElementById("categoryId").value = category._id;
+            document.getElementById("title").value = category.title;
+            document.getElementById("imageUrl").value = category.imageUrl || "";
+          } else {
+            alert(result.message);
+          }
+        } catch (error) {
+          console.error("Error fetching category:", error);
+        }
+      }
+
+      async function deleteCategory(categoryId) {
+        try {
+          const response = await fetch(
+            `http://localhost:5000/api/v1/category/delete/${categoryId}`,
+            {
+              method: "DELETE",
+              headers: {
+                "Content-Type": "application/json",
+              },
+              credentials: "include",
+            }
+          );
+          const result = await response.json();
+          alert(result.message);
+          fetchCategories();
+        } catch (error) {
+          console.error("Error deleting category:", error);
+        }
+      }
+
+      fetchCategories();
+    </script>
+  </body>
+</html>
