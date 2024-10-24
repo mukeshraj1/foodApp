@@ -1,4 +1,4 @@
-cat << 'EOF' > README.md
+
 # Project Name
  
 ## Overview
@@ -346,6 +346,4 @@ The application includes a global error handler that catches and logs errors, th
  
 The application uses MongoDB for the database. The connection is established using Mongoose. Ensure that the `MONGO_URL` environment variable is set in your `.env` file.
  
-EOF
- 
-has context menu
+
