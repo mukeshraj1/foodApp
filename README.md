@@ -306,7 +306,8 @@ This project is a web application built using Node.js and Express. It includes v
     - **Method**: `POST`
     - **Description**: Updates the status of an order.
     - **Request Body**:
-        ```json        {
+        ```json        
+        {
             "status": "string"
         }
         ```
