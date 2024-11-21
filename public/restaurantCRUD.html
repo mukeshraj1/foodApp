@@ -111,7 +111,7 @@
           });
           const result = await response.json();
           alert(result.message);
-          fetchRestaurants(); // Refresh the restaurant list
+          fetchRestaurants();
           document.getElementById("restaurantForm").reset();
         });
 
@@ -140,11 +140,11 @@
           });
           const result = await response.json();
           alert(result.message);
-          fetchRestaurants(); // Refresh the restaurant list
+          fetchRestaurants(); 
           document.getElementById("restaurantForm").reset();
         });
 
-      // Edit restaurant by populating form with existing data
+      
       async function editRestaurant(restaurantId) {
         const response = await fetch(
           `http://localhost:5000/api/v1/restaurant/get/${restaurantId}`,
@@ -181,7 +181,6 @@
         fetchRestaurants();
       }
 
-      // Fetch initial list of restaurants
       fetchRestaurants();
     </script>
   </body>

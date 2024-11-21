@@ -45,5 +45,4 @@ router.post(
   orderStatusController
 );
 
-//exports
 module.exports = router;

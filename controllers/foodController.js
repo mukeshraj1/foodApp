@@ -18,7 +18,6 @@ const createfoodController = async (req, res) => {
       rating,
       ratingCount,
     } = req.body;
-    //validation
     if (!title || !description || !price || !restaurant) {
       return res.status(400).send({
         success: false,

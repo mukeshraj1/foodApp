@@ -1,5 +1,4 @@
 const mongoose=require('mongoose')
-//Schema
 const categorySchema=new mongoose.Schema({
     "title":{
         type:String,

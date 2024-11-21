@@ -16,8 +16,6 @@ const createRestaurantController = async (req, res) => {
       code,
       address,
     } = req.body;
-
-    // Validation
     if (!title || !address) {
       return res.status(400).send({
         success: false,
@@ -125,7 +123,7 @@ const deleteRestaurantController = async (req, res) => {
       message: "Restaurant has been deleted successfully",
     });
   } catch (error) {
-    console.error(error); // Log the error for debugging
+    console.error(error); 
     res.status(500).send({
       success: false,
       message: "Error in deleting restaurant",
@@ -137,10 +135,8 @@ const deleteRestaurantController = async (req, res) => {
 // Update Restaurant Details
 const updateRestaurantController = async (req, res) => {
   try {
-    const restaurantId = req.params.id; // Get restaurant ID from URL params
-    const { title, address, time, pickup, delivery } = req.body; // Destructure inputs from request body
-
-    // Validation - check for required fields
+    const restaurantId = req.params.id;
+    const { title, address, time, pickup, delivery } = req.body;
     if (!title || !address || !time) {
       return res.status(400).send({
         success: false,
@@ -158,7 +154,7 @@ const updateRestaurantController = async (req, res) => {
         pickup,
         delivery,
       },
-      { new: true } // Return the updated document
+      { new: true } 
     );
 
     // Check if the restaurant was found and updated
@@ -168,15 +164,13 @@ const updateRestaurantController = async (req, res) => {
         message: "Restaurant not found",
       });
     }
-
-    // Respond with success and the updated restaurant
     res.status(200).send({
       success: true,
       message: "Restaurant details updated successfully",
       restaurant: updatedRestaurant,
     });
   } catch (error) {
-    console.error(error); // Log the error for debugging
+    console.error(error);
     res.status(500).send({
       success: false,
       message: "Error in updating restaurant details",

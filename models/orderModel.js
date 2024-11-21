@@ -1,6 +1,4 @@
 const mongoose = require("mongoose");
-
-//Schema
 const orderSchema = new mongoose.Schema(
   {
     foods: [
